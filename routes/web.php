@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group([
+    'namespace' => 'App\Http\Controllers'
+], function(){
+    Route::get('/', 'RoulatteController@index');
+    Route::get('/get_data', 'RoulatteController@getData')->name('showdata');
 });
+
