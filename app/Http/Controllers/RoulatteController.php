@@ -23,7 +23,7 @@ class RoulatteController extends Controller
 
         $index = 0;
 
-        $totalStok = $products->sum('product_stocks.total_stock');
+        $totalStok = $products->sum('total_stock');
         dd($totalStok);
 
         foreach($products as $product){
