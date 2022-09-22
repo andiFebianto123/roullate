@@ -18,6 +18,10 @@ class RoulatteController extends Controller
 
         $data_products = [];
 
+        $colors = [];
+
+        $index = 1;
+
         foreach($products as $product){
             $data_products[] = [
                 'id' => $product->id,
@@ -26,12 +30,17 @@ class RoulatteController extends Controller
                 'value' => $product->name,
                 'win' => true,
                 'resultText' => 'You Get a '.$product->name,
-                'userData' => array( 'score' => $product->total_stock )
+                'userData' => array( 'score' => $product->total_stock ),
             ];
+            if(($index % 2) == 1){
+                $colors[] = '#d70b00';
+            }else{
+                $colors[] = '#b7b7b7';
+            } $index++;
         }
 
         $data = array(
-            "colorArray" => array("#364C62", "#F1C40F", "#E67E22", "#E74C3C", "#95A5A6", "#27AE60", "#2980B9", "#8E44AD", "#2C3E50", "#F39C12", "#D35400", "#C0392B", "#BDC3C7","#1ABC9C", "#2ECC71", "#E87AC2", "#3498DB", "#9B59B6", "#7F8C8D"),
+            // "colorArray" => array("#364C62", "#F1C40F", "#E67E22", "#E74C3C", "#95A5A6", "#27AE60", "#2980B9", "#8E44AD", "#2C3E50", "#F39C12", "#D35400", "#C0392B", "#BDC3C7","#1ABC9C", "#2ECC71", "#E87AC2", "#3498DB", "#9B59B6", "#7F8C8D"),
             
             // "segmentValuesArray" => array( 
             
@@ -90,7 +99,7 @@ class RoulatteController extends Controller
             // ),
             "svgWidth" => 1024,
             "svgHeight" => 768,
-            "wheelStrokeColor" => "#D0BD0C",
+            "wheelStrokeColor" => "#454344",
             "wheelStrokeWidth" => 18,
             "wheelSize" => 700,
             "wheelTextOffsetY" => 80,
@@ -126,6 +135,7 @@ class RoulatteController extends Controller
         );
 
         $data['segmentValuesArray'] = $data_products;
+        $data['colorArray'] = $colors;
 
         return response()->json($data);
     }

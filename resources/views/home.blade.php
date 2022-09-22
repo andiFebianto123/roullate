@@ -8,23 +8,86 @@
                 position: absolute;
                 left: 0%;
                 top: 0%;
-                z-index: 999;
+                z-index: 9;
                 width:100%;
                 height: 100%;
-                display: flex;
-                background-color: #EDEDED;
-                justify-content: center;
-                align-items: center;
+            }
+            body {
+                background-image: url("{{ URL::asset('media/crumbled paper.png') }}") !important;
+
+                /* Full height */
+                height: 100% !important;
+
+                background-position: center !important;
+                background-repeat: fixed !important;
+                background-size: cover !important;
+            }
+            .build {
+                overflow: hidden;
+                position: relative;
+                top: -123px;
+                z-index: 21;
+                opacity: 0;
+            }
+            .build .sidebar {
+                float: left;
+                width: 400px;
+                margin-right: 200px;
+                margin-left: 30px;
+            }
+            .build .right-panel {
+                float:left;
+                width: 600px;
+            }
+            #container {
+                width:100% !important;
+            }
+            .top {
+                z-index: 20;
+                position: relative;
+                height: 160px;
+                width: 100%;
+                background-image: url("{{ URL::asset('media/top red.png') }}") !important;
+                overflow:hidden;
+                padding-top:12px;
+            }
+            .footer{
+                z-index: 20;
+                clear: both;
+                position: relative;
+                margin-top: -300px;
+                height: 100px;
+            }
+            #loader .logo {
+                padding-top: 130px;
+            }
+            .top .lazone {
+                z-index: 90;
+                float:right;
+                margin-right:12px;
             }
         </style>
         <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 @endsection
 
 @section('content')
-    <div id="loader">
-        <img src="{{ URL::asset('media/loader.gif') }}" />
+    <div class="top">
+        <img class="lazone" src="{{ URL::asset('media/logo lazone.png') }}" height="40"/>
     </div>
-    <div id="container" class="main-content">
+    <div id="loader">
+        <div class="logo">
+            <img src="{{ URL::asset('media/logo roullate.png') }}" height="230" />
+        </div>
+        <div>
+            <img src="{{ URL::asset('media/loading1.gif') }}" height="200" />
+        </div>
+    </div>
+    <div class="build">
+        <div class="sidebar">
+            <img src="{{ URL::asset('media/roullate giveaway.png') }}" height="600" />
+        </div>
+        <div class="right-panel">
+        <div id="container" class="main-content">
         <button class="spinBtn">CLICK TO SPIN!</button>
         <div class="wheelContainer">
             <svg class="wheelSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" text-rendering="optimizeSpeed" preserveAspectRatio="xMidYMin meet">
@@ -56,6 +119,11 @@
             </div>
         </div>
     </div>
+        </div>
+    </div>
+    <div class="footer">
+        <img src="{{ URL::asset('media/bottom red.png') }}" height="200" style="width:100%;"/>
+    </div>
 @endsection
 
 @section('script')
@@ -65,6 +133,7 @@
     <script src="{{ URL::asset('js/TextPlugin.min.js') }}"></script>
     <script src="{{ URL::asset('js/Spin2WinWheel.min.js') }}"></script>
     <script>
+        $(".spinBtn").prop("disabled", true);
         function loadJSON(callback) {
             var xobj = new XMLHttpRequest();
                 // xobj.overrideMimeType("application/json");
@@ -74,6 +143,11 @@
                     //Call the anonymous function (callback) passing in the response
                     setTimeout(function(){
                         $('#loader').fadeOut();
+                        $('.build').animate({
+                            opacity: 1,
+                        }, 1000, function(){
+                            $(".spinBtn").prop("disabled", false);
+                        });
                     }, 2000);
                     callback(xobj.responseText);
                 }
