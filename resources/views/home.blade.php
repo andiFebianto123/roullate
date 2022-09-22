@@ -25,7 +25,7 @@
             .build {
                 overflow: hidden;
                 position: relative;
-                top: -123px;
+                top: -100px;
                 z-index: 21;
                 opacity: 0;
             }
@@ -59,7 +59,7 @@
                 height: 100px;
             }
             #loader .logo {
-                padding-top: 130px;
+                padding-top: 150px;
             }
             .top .lazone {
                 z-index: 90;
@@ -69,6 +69,25 @@
             .wheelText {
                 /* fill: black !important; */
                 font-weight: 800;
+            }
+
+            .progress {
+                width:400px;
+                margin-top: 10px;
+            }
+            
+            @media only screen and (max-width: 500px) {
+                #loader .logo img{
+                    width:100%;
+                    height: 200px;
+                }
+                .progress {
+                    width: 50%;
+                }
+                .img-price {
+                    width:100%;
+                    height: 400px;
+                }
             }
         </style>
         <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
@@ -83,46 +102,56 @@
             <img src="{{ URL::asset('media/logo roullate.png') }}" height="230" />
         </div>
         <div>
-            <img src="{{ URL::asset('media/loading1.gif') }}" height="200" />
-        </div>
-    </div>
-    <div class="build">
-        <div class="sidebar">
-            <img src="{{ URL::asset('media/roullate giveaway.png') }}" height="600" />
-        </div>
-        <div class="right-panel">
-        <div id="container" class="main-content">
-        <button class="spinBtn">CLICK TO SPIN!</button>
-        <div class="wheelContainer">
-            <svg class="wheelSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" text-rendering="optimizeSpeed" preserveAspectRatio="xMidYMin meet">
-                <defs>
-                    <filter id="shadow" x="-100%" y="-100%" width="550%" height="550%">
-                        <feOffset in="SourceAlpha" dx="0" dy="0" result="offsetOut"></feOffset>
-                        <feGaussianBlur stdDeviation="9" in="offsetOut" result="drop" />
-                        <feColorMatrix in="drop" result="color-out" type="matrix" values="0 0 0 0   0
-              0 0 0 0   0 
-              0 0 0 0   0 
-              0 0 0 .3 0" />
-                        <feBlend in="SourceGraphic" in2="color-out" mode="normal" />
-                    </filter>
-                </defs>
-                <g class="mainContainer">
-                    <g class="wheel">
-                    </g>
-                </g>
-                <g class="centerCircle" />
-                <g class="wheelOutline" />
-                <g class="pegContainer" opacity="1">
-                    <path class="peg" fill="#EEEEEE" d="M22.139,0C5.623,0-1.523,15.572,0.269,27.037c3.392,21.707,21.87,42.232,21.87,42.232 s18.478-20.525,21.87-42.232C45.801,15.572,38.623,0,22.139,0z" />
-                </g>
-                <g class="valueContainer" />
-                <g class="centerCircleImageContainer" />
-            </svg>
-            <div class="toast" style="display:none !important;">
-                <p></p>
+            <center>
+            <h2 class="loader-text" style="margin-top:10px;">50%</h2>
+            <div class="progress">
+                <div class="progress-bar bg-danger" role="progressbar" aria-label="Success example" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
+            </center>
         </div>
     </div>
+    <div class="container-fluid build">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-sm-4">
+                <center>
+                    <img class="img-price" src="{{ URL::asset('media/roullate giveaway.png') }}" height="550" />
+                </center>
+            </div>
+            <div class="col-md-6 col-sm-4">
+                <div id="container">
+                    <center><button class="spinBtn">CLICK TO SPIN!</button></center>
+                    <div class="wheelContainer">
+                        <svg class="wheelSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" text-rendering="optimizeSpeed" preserveAspectRatio="xMidYMin meet">
+                            <defs>
+                                <filter id="shadow" x="-100%" y="-100%" width="550%" height="550%">
+                                    <feOffset in="SourceAlpha" dx="0" dy="0" result="offsetOut"></feOffset>
+                                    <feGaussianBlur stdDeviation="9" in="offsetOut" result="drop" />
+                                    <feColorMatrix in="drop" result="color-out" type="matrix" values="0 0 0 0   0
+                        0 0 0 0   0 
+                        0 0 0 0   0 
+                        0 0 0 .3 0" />
+                                    <feBlend in="SourceGraphic" in2="color-out" mode="normal" />
+                                </filter>
+                            </defs>
+                            <g class="mainContainer">
+                                <g class="wheel">
+                                </g>
+                            </g>
+                            <g class="centerCircle" />
+                            <g class="wheelOutline" />
+                            <g class="pegContainer" opacity="1">
+                                <path class="peg" fill="#EEEEEE" d="M22.139,0C5.623,0-1.523,15.572,0.269,27.037c3.392,21.707,21.87,42.232,21.87,42.232 s18.478-20.525,21.87-42.232C45.801,15.572,38.623,0,22.139,0z" />
+                            </g>
+                            <g class="valueContainer" />
+                            <g class="centerCircleImageContainer" />
+                        </svg>
+                        <div class="toast" style="display:none !important;">
+                            <p></p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="footer">
@@ -139,24 +168,37 @@
     <script>
         $(".spinBtn").prop("disabled", true);
         function loadJSON(callback) {
-            var xobj = new XMLHttpRequest();
-                // xobj.overrideMimeType("application/json");
-                xobj.open('GET', "{{ route('showdata') }}", true);
-                xobj.onreadystatechange = function() {
-                if (xobj.readyState == 4 && xobj.status == "200") {
-                    //Call the anonymous function (callback) passing in the response
-                    setTimeout(function(){
-                        $('#loader').fadeOut();
-                        $('.build').animate({
-                            opacity: 1,
-                        }, 1000, function(){
-                            $(".spinBtn").prop("disabled", false);
-                        });
-                    }, 2000);
-                    callback(xobj.responseText);
+
+            var percent = 0;
+
+            var loader = setInterval(function(){
+                percent+=2;
+                $('.progress-bar').css('width', `${percent}%`);
+                $('.loader-text').html(`${percent} %`);
+                if(percent >= 96){
+                    clearInterval(loader);
+                    var xobj = new XMLHttpRequest();
+                    // xobj.overrideMimeType("application/json");
+                    xobj.open('GET', "{{ route('showdata') }}", true);
+                    xobj.onreadystatechange = function() {
+                    if (xobj.readyState == 4 && xobj.status == "200") {
+                        //Call the anonymous function (callback) passing in the response
+                        $('.progress-bar').css('width', `100%`);
+                        $('.loader-text').html(`100 %`);
+                        setTimeout(function(){
+                            $('#loader').fadeOut();
+                            $('.build').animate({
+                                opacity: 1,
+                            }, 1000, function(){
+                                $(".spinBtn").prop("disabled", false);
+                            });
+                        }, 2000);
+                        callback(xobj.responseText);
+                    }
+                };
+                xobj.send(null);
                 }
-            };
-            xobj.send(null);
+            }, 90);
         }
     </script>
     <script src="{{ URL::asset('js/index.js') }}"></script>
