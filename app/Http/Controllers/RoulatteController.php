@@ -17,6 +17,7 @@ class RoulatteController extends Controller
         ->get(['products.id', 'products.name', 'product_stocks.total_stock']);
 
         $data_products = [];
+        dd($products);
 
         $colors = [];
         $fills = [];
