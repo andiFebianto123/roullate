@@ -24,11 +24,10 @@ class RoulatteController extends Controller
         $index = 0;
 
         $totalStok = $products->sum('total_stock');
-        dd($totalStok);
 
         foreach($products as $product){
-            // $probability = ($product->total_stock / $totalStok) * 100;
-            $probability = $product->total_stock;
+            $probability = ($product->total_stock / $totalStok) * 100;
+            // $probability = $product->total_stock;
             $data_products[] = [
                 'id' => $product->id,
                 'probability' => $probability,
