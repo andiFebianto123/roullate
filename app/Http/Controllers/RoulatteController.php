@@ -139,11 +139,14 @@ class RoulatteController extends Controller
             
         );
 
+        if((count($products) % 2) == 1){
+            // jika ganjil
+            $colors[count($products) - 1] = $colors[1];
+        }
+
         $data['segmentValuesArray'] = $data_products;
         $data['colorArray'] = $colors;
         $data['fillColors'] = $fills;
-
-        dd($colors);
 
         return response()->json($data);
     }
