@@ -19,6 +19,7 @@ class RoulatteController extends Controller
         $data_products = [];
 
         $colors = [];
+        $fills = [];
 
         $index = 1;
 
@@ -34,8 +35,10 @@ class RoulatteController extends Controller
             ];
             if(($index % 2) == 1){
                 $colors[] = '#d70b00';
+                $fills[] = 'white';
             }else{
                 $colors[] = '#b7b7b7';
+                $fills[] = 'black';
             } $index++;
         }
 
@@ -136,6 +139,7 @@ class RoulatteController extends Controller
 
         $data['segmentValuesArray'] = $data_products;
         $data['colorArray'] = $colors;
+        $data['fillColors'] = $fills;
 
         return response()->json($data);
     }

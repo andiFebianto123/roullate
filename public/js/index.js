@@ -70,6 +70,25 @@ function init() {
     
     //WITH your own button
     myWheel.init({data:jsonData, onResult:myResult, onGameEnd:myGameEnd, onError:myError, spinTrigger: mySpinBtn});
+
+    var labels = $('.valueContainer').children();
+    var fills = jsonData.fillColors;
+
+    for (let i = 0; i < fills.length; i++) {
+      labels.eq(i).children().attr('fill', fills[i]);
+      labels.eq(i).children().attr('y', '190');
+
+      labels.eq(i).css({
+        'writing-mode': 'vertical-lr',
+        'text-orientation': 'mixed',
+        'text-transform': 'uppercase',
+        'font-weight':'900',
+        'margin-left':'80px',
+      });
+      // console.log(labels.eq(i).children());
+    }
+
+    // console.log(labels, jsonData);
     
     //WITHOUT your own button
     // myWheel.init({data:jsonData, onResult:myResult, onGameEnd:myGameEnd, onError:myError});
