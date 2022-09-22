@@ -23,15 +23,18 @@ class RoulatteController extends Controller
 
         $index = 0;
 
+        $totalStok = $products->sum('product_stocks.total_stock');
+
         foreach($products as $product){
+            $probability = ($product->total_stock / $totalStok) * 100;
             $data_products[] = [
                 'id' => $product->id,
-                'probability' => $product->total_stock,
+                'probability' => $probability,
                 'type' => 'string',
                 'value' => $product->name,
                 'win' => true,
                 'resultText' => 'You Get a '.$product->name,
-                'userData' => array( 'score' => $product->total_stock ),
+                'userData' => array( 'score' => $probability ),
             ];
             if($index == 0){
                 $colors[] = '#d70b00';
