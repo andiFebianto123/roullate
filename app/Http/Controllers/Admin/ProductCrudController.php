@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ProductRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Facades\DB;
+use App\Models\ProductStock;
+use App\Models\Product;
+use Exception;
+use Illuminate\Database\QueryException;
 
 /**
  * Class ProductCrudController
@@ -78,5 +83,27 @@ class ProductCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+
+        DB::beginTransaction();
+        try {
+            $id = $this->crud->getCurrentEntryId() ?? $id;
+
+            $response = $this->crud->delete($id);
+            DB::commit();
+            return $response;
+        } catch (Exception $e) {
+            DB::rollBack();
+            if($e instanceof QueryException){
+                if(isset($e->errorInfo[1]) && $e->errorInfo[1] == 1451){
+                    return response()->json(['message' => 'This product is using to stock'], 403);
+                }
+            }
+            throw $e;
+        }
     }
 }
