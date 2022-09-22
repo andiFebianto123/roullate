@@ -25,7 +25,8 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'name' => 'required|unique:name|max:255',
+            'satuan' => 'required|max:255'
         ];
     }
 
