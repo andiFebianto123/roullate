@@ -143,6 +143,7 @@ class RoulatteController extends Controller
             // jika ganjil
             $colors[count($products) - 1] = $colors[1];
         }
+        dd($colors);
 
         $data['segmentValuesArray'] = $data_products;
         $data['colorArray'] = $colors;
