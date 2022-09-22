@@ -13,7 +13,7 @@ class RoulatteController extends Controller
 
     function getData(){
 
-        $products = Product::join('product_stocks', 'product_stocks.product_id', 'products.id')->orderBy('product_stocks.total_stock', 'DESC')
+        $products = Product::join('product_stocks', 'product_stocks.product_id', 'products.id')->orderBy('product_stocks.id', 'DESC')
         ->get(['products.id', 'products.name', 'product_stocks.total_stock']);
 
         $data_products = [];
