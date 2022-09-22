@@ -21,7 +21,7 @@ class RoulatteController extends Controller
         $colors = [];
         $fills = [];
 
-        $index = 1;
+        $index = 0;
 
         foreach($products as $product){
             $data_products[] = [
@@ -33,13 +33,15 @@ class RoulatteController extends Controller
                 'resultText' => 'You Get a '.$product->name,
                 'userData' => array( 'score' => $product->total_stock ),
             ];
-            if(($index % 2) == 1){
+            if($index == 0){
                 $colors[] = '#d70b00';
                 $fills[] = 'white';
+                $index = 1;
             }else{
+                $index = 0;
                 $colors[] = '#b7b7b7';
                 $fills[] = 'black';
-            } $index++;
+            }
         }
 
         $data = array(
