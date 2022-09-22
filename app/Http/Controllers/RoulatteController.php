@@ -17,7 +17,6 @@ class RoulatteController extends Controller
         ->get(['products.id', 'products.name', 'product_stocks.total_stock']);
 
         $data_products = [];
-        dd($products);
 
         $colors = [];
         $fills = [];
@@ -143,6 +142,8 @@ class RoulatteController extends Controller
         $data['segmentValuesArray'] = $data_products;
         $data['colorArray'] = $colors;
         $data['fillColors'] = $fills;
+
+        dd($colors);
 
         return response()->json($data);
     }
