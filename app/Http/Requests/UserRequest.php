@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserRequest extends FormRequest
 {
@@ -27,6 +28,8 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required',
             'email' => 'required|string|unique:users,email,'.$this->id.',id',
+            'password' => Rule::requiredIf($this->method() == 'POST'),
+            'password_confirmation'=>'same:password',
         ];
     }
 

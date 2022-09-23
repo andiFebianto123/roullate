@@ -11,11 +11,16 @@ function myResult(e) {
       $.post( "reduce-stock", { _token: token, id: e.userData.id, name: e.msg })
       .done(function( response ) {
         if (response.status) {
-          Swal.fire(
-            'Selamat',
-            response.message,
-            'success'
-          )
+          Swal.fire({
+            title: 'Selamat',
+            text: response.message,
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#d7322d',
+            confirmButtonText: 'Tutup'
+          }).then((result) => {
+          })
+          
         }else{
           console.log(response.message);
         }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\UserRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Prologue\Alerts\Facades\Alert;
 
 /**
  * Class UserCrudController
@@ -63,7 +64,11 @@ class UserCrudController extends CrudController
         CRUD::field('name');
         CRUD::field('email');
         CRUD::field('password');
-
+        CRUD::addField([   // select_from_array
+            'name'        => 'password_confirmation',
+            'label'       => 'Password Confirmation',
+            'type'        => 'password',
+        ]);
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');
@@ -80,5 +85,63 @@ class UserCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function store(UserRequest $request)
+    {
+        $this->crud->hasAccessOrFail('create');
+
+        $this->crud->setRequest($this->crud->validateRequest());
+
+        $request = $this->crud->getRequest();
+        $this->crud->setRequest($this->handlePasswordInput($request));
+        $this->crud->unsetValidation();
+
+        $item = $this->crud->create($this->crud->getStrippedSaveRequest($request));
+
+        Alert::success(trans('backpack::crud.insert_success'))->flash();
+
+        $this->crud->setSaveAction();
+
+        return $this->crud->performSaveAction($item->getKey());
+    }
+
+
+    public function update($id)
+    {
+        $this->crud->hasAccessOrFail('update');
+
+        $this->crud->setRequest($this->crud->validateRequest());
+
+        $request = $this->crud->getRequest();
+        $this->handlePasswordInput($request);
+        $this->crud->setRequest($request);
+        $this->crud->unsetValidation();
+        $item = $this->crud->update($request->get($this->crud->model->getKeyName()), 
+
+        $this->crud->getStrippedSaveRequest($request));
+        $this->data['entry'] = $this->crud->entry = $item;
+        
+        Alert::success(trans('backpack::crud.update_success'))->flash();
+
+        $this->crud->setSaveAction();
+
+        return $this->crud->performSaveAction($item->getKey());
+
+
+    }
+
+
+    private function handlePasswordInput($request)
+    {
+        // Remove fields not present on the user.
+        $request->request->remove('password_confirmation');
+        // Encrypt password if specified.
+        if ($request->input('password')) {
+            $request->request->set('password', bcrypt($request->input('password')));
+        } else {
+            $request->request->remove('password');
+        }
+        return $request;
     }
 }
