@@ -25,7 +25,7 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:products,name|max:255',
+            'name' => 'required|string|unique:products,name,'.$this->id.',id',
             'satuan' => 'required|max:255'
         ];
     }

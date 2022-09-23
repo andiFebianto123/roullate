@@ -22,7 +22,6 @@ class ProductCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -46,7 +45,21 @@ class ProductCrudController extends CrudController
     {
         CRUD::column('name');
         CRUD::column('satuan');
+        CRUD::addColumn(
+            [   // Color
+                'name'    => 'background_color',
+                'label'   => 'Background Color',
+                'type'    => 'color',
+            ],
+        );
 
+        CRUD::addColumn(
+            [   // Color
+                'name'    => 'text_color',
+                'label'   => 'Text Color',
+                'type'    => 'color',
+            ],
+        );
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
@@ -66,6 +79,24 @@ class ProductCrudController extends CrudController
 
         CRUD::field('name');
         CRUD::field('satuan');
+        CRUD::addField(
+            [   // Color
+                'name'    => 'background_color',
+                'label'   => 'Background Color',
+                'type'    => 'color',
+                'default' => '',
+
+            ],
+        );
+
+        CRUD::addField(
+            [   // Color
+                'name'    => 'text_color',
+                'label'   => 'Text Color',
+                'type'    => 'color',
+                'default' => '',
+            ],
+        );
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

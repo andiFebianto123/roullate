@@ -2,20 +2,41 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Configuration;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductStock;
+use App\Models\StockOut;
 
 class RoulatteController extends Controller
 {
     function index(){
-        return view('home-secondary');
+        $configuration = Configuration::where('key', 'show_roulette')->first()->value;
+
+        if ($configuration) {
+            return view('home-secondary');
+        }else{
+            echo "";
+        }
     }
 
     function getData(){
 
-        $products = Product::join('product_stocks', 'product_stocks.product_id', 'products.id')->orderBy('product_stocks.id', 'DESC')
-        ->get(['products.id', 'products.name', 'product_stocks.total_stock']);
+        $products = Product::join('product_stocks', 'product_stocks.product_id', 'products.id')
+                    ->leftJoin('stock_outs', 'stock_outs.product_stock_id', 'product_stocks.id')
+                    ->orderBy('product_stocks.id', 'DESC')
+                    ->selectRaw("
+                        product_stocks.id as id, 
+                        min(products.id) as product_id, 
+                        min(products.name) as name, 
+                        min(product_stocks.total_stock) as total_stock, 
+                        sum(ifnull(stock_outs.out, 0)) as stock_out,
+                        (min(product_stocks.total_stock) - sum(ifnull(stock_outs.out, 0))) as stock_remain,
+                        min(background_color) as background_color,
+                        min(text_color) as text_color
+                    ")
+                    ->groupBy('product_stocks.id')
+                    ->get();
 
         $data_products = [];
 
@@ -24,10 +45,10 @@ class RoulatteController extends Controller
 
         $index = 0;
 
-        $totalStok = $products->sum('total_stock');
+        $totalStok = $products->sum('stock_remain');
 
         foreach($products as $product){
-            $probability = ($product->total_stock / $totalStok) * 100;
+            $probability = ($product->stock_remain / $totalStok) * 100;
             // $probability = $product->total_stock;
             $probability = floor($probability);
             $data_products[] = [
@@ -41,9 +62,9 @@ class RoulatteController extends Controller
             ];
 
                 if($index == 0){
-                    if (strtolower($product->name) == 'sling bag') {
-                        $colors[] = '#000000';
-                        $fills[] = '#ffffff';
+                    if (isset($product->background_color) && isset($product->text_color)) {
+                        $colors[] = $product->background_color;
+                        $fills[] = $product->text_color;
                         $index = 1;
                     }else{
                         $colors[] = '#d70b00';
@@ -51,9 +72,9 @@ class RoulatteController extends Controller
                         $index = 1;
                     }
                 }else{
-                    if (strtolower($product->name) == 'sling bag') {
-                        $colors[] = '#000000';
-                        $fills[] = '#ffffff';
+                    if (isset($product->background_color) && isset($product->text_color)) {
+                        $colors[] = $product->background_color;
+                        $fills[] = $product->text_color;
                         $index = 1;
                     }else{
                         $index = 0;
@@ -64,63 +85,6 @@ class RoulatteController extends Controller
         }
 
         $data = array(
-            // "colorArray" => array("#364C62", "#F1C40F", "#E67E22", "#E74C3C", "#95A5A6", "#27AE60", "#2980B9", "#8E44AD", "#2C3E50", "#F39C12", "#D35400", "#C0392B", "#BDC3C7","#1ABC9C", "#2ECC71", "#E87AC2", "#3498DB", "#9B59B6", "#7F8C8D"),
-            
-            // "segmentValuesArray" => array( 
-            
-            //     array(
-            //     // "probability" => 20,
-            //     "type" => "string",
-            //     "value" => "HOLIDAY^FOR TWO",
-            //     "win" => false,
-            //     "resultText" => "YOU WON A HOLIDAY!",
-            //     "userData" => array("score" => 10)
-            // ),
-            //     array(
-            //     // "probability" => 25,
-            //     "type" => "string",
-            //     "value" => "Kopi",
-            //     "win" => true,
-            //     "resultText" => "A STAR!",
-            //     "userData" => array("score" => 20)
-            // )
-            // ,
-            //     array(
-            //     // "probability" => 120,
-            //     "type" => "string",
-            //     "value" => "Susu",
-            //     "win" => true,
-            //     "resultText" => "A SQUARE!",
-            //     "userData" => array("score" => 3000)
-            // )
-            // ,
-            //     array(
-            //     // "probability" => 20,
-            //     "type" => "image",
-            //     "value" => "media/tip_oct.svg",
-            //     "win" => false,
-            //     "resultText" => "An OCTOGON!",
-            //     "userData" => array("score" => 40)
-            // )
-            // ,
-            //     array(
-            //     // "probability" => 20,
-            //     "type" => "image",
-            //     "value" => "media/tip_hex.svg",
-            //     "win" => true,
-            //     "resultText" => "A HEXAGON!",
-            //     "userData" => array("score" => 50)
-            // )
-            // ,
-            //     array(
-            //     // "probability" => 14,
-            //     "type" => "image",
-            //     "value" => "media/tip_triangle.svg",
-            //     "win" => true,
-            //     "resultText" => "A TRIANGLE!",
-            //     "userData" => array("score" => 60)
-            // )
-            // ),
             "svgWidth" => 1024,
             "svgHeight" => 768,
             "wheelStrokeColor" => "#454344",
@@ -173,19 +137,21 @@ class RoulatteController extends Controller
 
     public function reduceStock(Request $request)
     {
-        $productId = $request->id;
+        $id = $request->id;
         $productName = $request->name;
 
-        $currentStock = ProductStock::where('product_id', $productId)->first();
+        $initialStock = ProductStock::where('id', $id)->first();
+        $currentStock = StockOut::where('product_stock_id', $id)->sum('out');
 
         if (isset($currentStock)) {
-            $reducedStock = $currentStock->total_stock - 1;
 
-            if ($reducedStock > 0) {
-                $updateStock = ProductStock::where('product_id', $productId)->first();
-                $updateStock->total_stock = $reducedStock;
-                $updateStock->save();
-
+            if ($initialStock->total_stock > $currentStock) {
+                $insert = new StockOut();
+                $insert->out = 1;
+                $insert->product_stock_id = $id;
+                $insert->product_name = $productName;
+                $insert->save();
+            
                 return [
                     'status' => true,
                     'message' => 'Selamat Anda mendapatkan '.$productName,

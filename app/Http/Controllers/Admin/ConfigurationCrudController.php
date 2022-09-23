@@ -2,25 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\ProductStockRequest;
-use App\Models\StockOut;
+use App\Http\Requests\ConfigurationRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use Doctrine\DBAL\Query\QueryException;
-use Exception;
-use Illuminate\Support\Facades\DB;
 
 /**
- * Class ProductStockCrudController
+ * Class ConfigurationCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class ProductStockCrudController extends CrudController
+class ConfigurationCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -29,9 +23,9 @@ class ProductStockCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\ProductStock::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/product-stock');
-        CRUD::setEntityNameStrings('product stock', 'product stocks');
+        CRUD::setModel(\App\Models\Configuration::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/configuration');
+        CRUD::setEntityNameStrings('configuration', 'configurations');
     }
 
     /**
@@ -42,10 +36,8 @@ class ProductStockCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('product_id');
-        CRUD::column('total_stock');
-        CRUD::column('stock_out');
-        CRUD::column('stock_available');
+        CRUD::column('key');
+        CRUD::column('value');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -62,10 +54,9 @@ class ProductStockCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(ProductStockRequest::class);
+        CRUD::setValidation(ConfigurationRequest::class);
 
-        CRUD::field('product_id');
-        CRUD::field('total_stock');
+        CRUD::field('value');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -83,29 +74,5 @@ class ProductStockCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
-    }
-
-    public function destroy($id)
-    {
-        $this->crud->hasAccessOrFail('delete');
-
-        DB::beginTransaction();
-        try {
-            $id = $this->crud->getCurrentEntryId() ?? $id;
-
-            $response = $this->crud->delete($id);
-
-            StockOut::where('product_stock_id', $id)->delete();
-            DB::commit();
-            return $response;
-        } catch (Exception $e) {
-            DB::rollBack();
-            if($e instanceof QueryException){
-                if(isset($e->errorInfo[1]) && $e->errorInfo[1] == 1451){
-                    return response()->json(['message' => 'This product is using to stock'], 403);
-                }
-            }
-            throw $e;
-        }
     }
 }

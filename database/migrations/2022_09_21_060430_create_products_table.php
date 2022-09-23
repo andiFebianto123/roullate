@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('satuan');
+            $table->string('background_color')->nullable();
+            $table->string('text_color')->nullable();
             $table->timestamps();
         });
     }
