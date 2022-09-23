@@ -18,5 +18,6 @@ Route::group([
 ], function(){
     Route::get('/', 'RoulatteController@index');
     Route::get('/get_data', 'RoulatteController@getData')->name('showdata');
+    Route::post('reduce-stock', 'RoulatteController@reduceStock');
 });
 

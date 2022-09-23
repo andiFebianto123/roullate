@@ -73,7 +73,7 @@
                 left: 0;
                 width: 100%;
             }
-            @media (max-height:620px){
+            @media (max-height:520px){
                 .footer{
                     z-index: 20;
                     clear: both;
@@ -126,7 +126,7 @@
     </div>
     <div id="loader">
         <div class="d-flex align-items-center"  style="height:100%;">
-            <div class="row">
+            <div class="row w-100">
                 <div class="col-md-12">
                     <img class="img-fluid p-4" src="{{ URL::asset('media/logo roullate.png') }}" style="max-height:230px;" />
                 </div>
@@ -139,16 +139,7 @@
                     </center>
                 </div>
             </div>
-
         </div>
-        <!-- <div class="logo">
-            <img src="{{ URL::asset('media/logo roullate.png') }}" style="max-height:230px;" />
-        </div>
-        <div class="loading-bar">
-            <center>
-                
-            </center>
-        </div> -->
     </div>
     <div class="container-fluid build">
         <div class="row justify-content-center">
@@ -211,7 +202,7 @@
         function loadJSON(callback) {
 
             var percent = 0;
-
+            $(".build").addClass('d-none')
             var loader = setInterval(function(){
                 percent+=2;
                 $('.progress-bar').css('width', `${percent}%`);
@@ -228,6 +219,7 @@
                         $('.loader-text').html(`100 %`);
                         setTimeout(function(){
                             $('#loader').fadeOut();
+                            $(".build").removeClass('d-none')
                             $("#imagePackage").css('height', $("#whellSpinSection").height()+"px")
                             $('.build').animate({
                                 opacity: 1,
@@ -243,5 +235,7 @@
             }, 90);
         }
     </script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="{{ URL::asset('js/index.js') }}"></script>
 @endsection

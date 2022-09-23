@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>RouLAtte</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link href='https://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'> -->
-    <!-- <link rel="stylesheet" href="{{ URL::asset('css/style.css') }}"> -->
+    <meta name="csrf-token" content="{{ csrf_token() }}" /> 
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     @yield('style')
 </head>

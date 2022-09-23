@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\ProductStock;
 
 class RoulatteController extends Controller
 {
@@ -35,18 +36,31 @@ class RoulatteController extends Controller
                 'type' => 'string',
                 'value' => $product->name,
                 'win' => true,
-                'resultText' => 'You Get a '.$product->name,
-                'userData' => array( 'score' => $probability ),
+                'resultText' => $product->name,
+                'userData' => array( 'id' => $product->id, 'score' => $probability ),
             ];
-            if($index == 0){
-                $colors[] = '#d70b00';
-                $fills[] = 'white';
-                $index = 1;
-            }else{
-                $index = 0;
-                $colors[] = '#b7b7b7';
-                $fills[] = 'black';
-            }
+
+                if($index == 0){
+                    if (strtolower($product->name) == 'sling bag') {
+                        $colors[] = '#000000';
+                        $fills[] = '#ffffff';
+                        $index = 1;
+                    }else{
+                        $colors[] = '#d70b00';
+                        $fills[] = 'white';
+                        $index = 1;
+                    }
+                }else{
+                    if (strtolower($product->name) == 'sling bag') {
+                        $colors[] = '#000000';
+                        $fills[] = '#ffffff';
+                        $index = 1;
+                    }else{
+                        $index = 0;
+                        $colors[] = '#b7b7b7';
+                        $fills[] = 'black';
+                    }
+                }            
         }
 
         $data = array(
@@ -154,5 +168,34 @@ class RoulatteController extends Controller
         $data['fillColors'] = $fills;
 
         return response()->json($data);
+    }
+
+
+    public function reduceStock(Request $request)
+    {
+        $productId = $request->id;
+        $productName = $request->name;
+
+        $currentStock = ProductStock::where('product_id', $productId)->first();
+
+        if (isset($currentStock)) {
+            $reducedStock = $currentStock->total_stock - 1;
+
+            if ($reducedStock > 0) {
+                $updateStock = ProductStock::where('product_id', $productId)->first();
+                $updateStock->total_stock = $reducedStock;
+                $updateStock->save();
+
+                return [
+                    'status' => true,
+                    'message' => 'Selamat Anda mendapatkan '.$productName,
+                ];
+            }
+        }
+
+        return [
+            'status' => false,
+            'message' => 'Stock Tidak Tersedia',
+        ];
     }
 }
