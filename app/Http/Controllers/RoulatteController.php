@@ -8,7 +8,7 @@ use App\Models\Product;
 class RoulatteController extends Controller
 {
     function index(){
-        return view('home');
+        return view('home-secondary');
     }
 
     function getData(){
