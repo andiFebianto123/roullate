@@ -44,6 +44,14 @@
                 float:left;
                 width: 600px;
             }
+            @media (min-width:1024px){
+            .build {  overflow: hidden; 
+                position: fixed;
+                margin-top: 80px;
+                z-index: 21;
+
+                }
+            }
             #container {
                 width:100% !important;
             }
@@ -64,6 +72,16 @@
                 bottom: 0;
                 left: 0;
                 width: 100%;
+            }
+            @media (max-height:620px){
+                .footer{
+                    z-index: 20;
+                    clear: both;
+                    position: relative;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                }
             }
             #loader .logo {
                 top: 25%;
@@ -107,26 +125,39 @@
         <img class="lazone" src="{{ URL::asset('media/logo lazone.png') }}" height="40"/>
     </div>
     <div id="loader">
-        <div class="logo">
+        <div class="d-flex align-items-center"  style="height:100%;">
+            <div class="row">
+                <div class="col-md-12">
+                    <img src="{{ URL::asset('media/logo roullate.png') }}" style="max-height:230px;" />
+                </div>
+                <div class="col-md-12">
+                    <center>
+                        <h2 class="loader-text" style="margin-top:30px;">50%</h2>
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" role="progressbar" aria-label="Success example" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </center>
+                </div>
+            </div>
+
+        </div>
+        <!-- <div class="logo">
             <img src="{{ URL::asset('media/logo roullate.png') }}" style="max-height:230px;" />
         </div>
         <div class="loading-bar">
             <center>
-                <h2 class="loader-text" style="margin-top:10px;">50%</h2>
-                <div class="progress">
-                    <div class="progress-bar bg-danger" role="progressbar" aria-label="Success example" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
+                
             </center>
-        </div>
+        </div> -->
     </div>
     <div class="container-fluid build">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12 col-12">
-                <img class="img-fluid" src="{{ URL::asset('media/package.png') }}" style="max-height:750px;"/>
+                <img id="imagePackage" class="img-fluid" src="{{ URL::asset('media/package.png') }}" style="max-height:750px;"/>
                 <div class="m-4"></div>
             </div>
             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12 col-12">
-                <div>
+                <div id="whellSpinSection">
                     <button class="spinBtn">CLICK TO SPIN!</button>
                     <div class="wheelContainer">
                         <svg class="wheelSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" text-rendering="optimizeSpeed" preserveAspectRatio="xMidYMin meet">
@@ -174,6 +205,9 @@
     <script src="{{ URL::asset('js/Spin2WinWheel.min.js') }}"></script>
     <script>
         $(".spinBtn").prop("disabled", true);
+        $( window ).resize(function() {
+            $("#imagePackage").css('height', $("#whellSpinSection").height()+"px")
+        });
         function loadJSON(callback) {
 
             var percent = 0;
@@ -194,6 +228,7 @@
                         $('.loader-text').html(`100 %`);
                         setTimeout(function(){
                             $('#loader').fadeOut();
+                            $("#imagePackage").css('height', $("#whellSpinSection").height()+"px")
                             $('.build').animate({
                                 opacity: 1,
                             }, 1000, function(){
