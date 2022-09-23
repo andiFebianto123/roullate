@@ -128,7 +128,7 @@
         <div class="d-flex align-items-center"  style="height:100%;">
             <div class="row">
                 <div class="col-md-12">
-                    <img src="{{ URL::asset('media/logo roullate.png') }}" style="max-height:230px;" />
+                    <img class="img-fluid p-4" src="{{ URL::asset('media/logo roullate.png') }}" style="max-height:230px;" />
                 </div>
                 <div class="col-md-12">
                     <center>
