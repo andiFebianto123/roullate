@@ -10,6 +10,7 @@ use App\Models\StockOut;
 
 class RoulatteController extends Controller
 {
+    // andi edited
     function index(){
         $configuration = Configuration::where('key', 'show_roulette')->first()->value;
 
